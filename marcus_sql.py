@@ -30,11 +30,11 @@ def get_phonebook_input():
 
     return [first_name, last_name, phone, age, email]
 
-def yes_no():
-    user_choice = input("Are you sure you want to delete everything? [Y/N]")
+def yes_no(string):
+    user_choice = input(string)
     while user_choice not in ['Y', 'y', 'N', 'n']:
         print('Invalid')
-        user_choice = input("Are you sure you want to delete everything? [Y/N]")
+        user_choice = input(string)
     return user_choice
 
 
@@ -134,9 +134,7 @@ if __name__ == "__main__":
             print(entry)
 
         phonebook_id = input('Select your phonebook entry:')
-
-        # TODO Is this the right way to select a single value?
-        selection = cursor.execute("SELECT * FROM PHONEBOOK WHERE id=?", (phonebook_id))
+        selection = cursor.execute("SELECT id FROM PHONEBOOK WHERE id=?", (phonebook_id))
 
         print('Selected Entry: ')
         for entry in selection:
@@ -217,9 +215,10 @@ if __name__ == "__main__":
     #Delete Everything
     if user_input == "7":
 
-        user_choice = yes_no()
+        user_choice = yes_no('Are you sure you want to delete everything? [Y/N]')
 
         if user_choice == "Y" or "y":
+            print('table purged')
             entries = cursor.execute("SELECT * FROM PHONEBOOK")
             cursor.execute("DELETE FROM PHONEBOOK")
             conn.commit()
@@ -229,4 +228,19 @@ if __name__ == "__main__":
 
     #Show all address entries
     if user_input == "8":
-        print('i do nothing')
+        print('Select a phonebook')
+
+        show_book()
+        phonebook_id = input('Select your phonebook entry:')
+        selection = cursor.execute("SELECT id FROM PHONEBOOK WHERE id=?", ([phonebook_id]))
+        print(selection.fetchall())
+
+        #select all addresses that connect to phonebook
+
+        selection = cursor.execute("SELECT * FROM PHONEBOOK INNER JOIN ADDRESSES ON ADDRESSES.book_id = PHONEBOOK.id ")
+
+        print("Related Addresses")
+        for item in selection:
+            if int(item[0]) == int(phonebook_id):
+                print('Contact:', item[1], item[2], ',', 'Address:', item[7])
+
