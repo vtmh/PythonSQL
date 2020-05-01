@@ -31,7 +31,7 @@ def init_tables():
     # TODO
     # This should cascade delete from book_id
     cursor.execute("CREATE TABLE IF NOT EXISTS Addresses "
-                   "( id INTEGER PRIMARY KEY AUTOINCREMENT, address TEXT, book_id INTEGER,  FOREIGN KEY(book_id) REFERENCES PhoneBook(id) )")
+                   "( id INTEGER PRIMARY KEY AUTOINCREMENT, address TEXT, book_id INTEGER,  FOREIGN KEY(book_id) REFERENCES PhoneBook(id) ON DELETE CASCADE )")
     print("Tables successfully created and/or exist already.")
 
 
@@ -39,12 +39,20 @@ if __name__ == "__main__":
     # Create a connection to the DB
     conn = sqlite3.connect('phonebook.db')
 
+
+
     # Create a cursor object to perform SQL
     cursor = conn.cursor()
+
+    #Enable foreign keys
+    print(cursor.execute('PRAGMA foreign_keys = ON'))
 
     # Create the phonebook table
     # if it doesn't exist already
     init_tables()
+
+    # print(cursor.execute('PRAGMA foreign_keys').fetchall())
+    # print(cursor.execute('pragma table_info(Addresses)').fetchall())
 
     # Ask User for Input
     print("What would you like to do?")
@@ -131,7 +139,7 @@ if __name__ == "__main__":
         cursor.execute("DELETE FROM PHONEBOOK WHERE id=?", (deleted_entry))
         conn.commit()
 
-        print('Entry successfully deleteted')
+        print('Entry successfully deleted')
 
 
     #Insert Address
@@ -148,7 +156,6 @@ if __name__ == "__main__":
         cursor.execute('INSERT into Addresses (address, book_id) VALUES (?, ?)', (address, phonebook_entry))
 
         conn.commit()
-
 
     #Edit Address
     if user_input == "5":
@@ -172,13 +179,17 @@ if __name__ == "__main__":
         conn.commit()
         print("Address updated successfully.")
 
-
-
-
     #Delete Address
     if user_input == "6":
-        print("I do nothing")
+        print("Choose an address to delete")
+        selection = cursor.execute("SELECT * FROM ADDRESSES")
+        print(selection.fetchall())
+        deleted_address = input("Delete this Entry:  ")
+        cursor.execute("DELETE FROM ADDRESSES WHERE id=?", (deleted_address))
+        conn.commit()
+
+        print('Address successfully deleted')
 
     #Delete Everything
-    if user_input == "6":
+    if user_input == "7":
         print("I do nothing")
