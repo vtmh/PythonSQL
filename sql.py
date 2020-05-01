@@ -8,14 +8,19 @@ def fetch_into_dict(cursor):
     ]
 if __name__ == '__main__':
 	# do crap with python in the main execution thread....
+	# first commit!
 
 	# open connection with db, this will create a file
-
 	conn = sqlite3.connect('marcus_example.db')
+
+
 	print('Opened DB')
 
 	# create table...this is just an example and should be removed when you write your real stuff
 	conn.execute("CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, age INTEGER NOT NULL)")
+
+
+
 	print ("Table created successfully");
 
 	# note pks are automatically added
