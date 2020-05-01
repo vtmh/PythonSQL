@@ -96,6 +96,7 @@ if __name__ == "__main__":
     print("6. Delete Address")
     print("7. Delete Everything")
     print("8. Show all addresses from phonebook entry")
+    print("9. FULL OUTER JOIN PRACTICE")
 
     user_input = input("Select your command: ")
     print(user_input)
@@ -219,7 +220,6 @@ if __name__ == "__main__":
 
         if user_choice == "Y" or "y":
             print('table purged')
-            entries = cursor.execute("SELECT * FROM PHONEBOOK")
             cursor.execute("DELETE FROM PHONEBOOK")
             conn.commit()
 
@@ -237,10 +237,23 @@ if __name__ == "__main__":
 
         #select all addresses that connect to phonebook
 
-        selection = cursor.execute("SELECT * FROM PHONEBOOK INNER JOIN ADDRESSES ON ADDRESSES.book_id = PHONEBOOK.id ")
+        selection = cursor.execute("SELECT * FROM PHONEBOOK LEFT OUTER JOIN ADDRESSES ON ADDRESSES.book_id = PHONEBOOK.id ")
 
-        print("Related Addresses")
+        # print("Related Addresses")
+        # for item in selection:
+        #     print('Contact:', item[1], item[2], ',', 'Address:', item[7])
+
+
         for item in selection:
             if int(item[0]) == int(phonebook_id):
                 print('Contact:', item[1], item[2], ',', 'Address:', item[7])
 
+
+    if user_input == "9":
+        print("Test to see what happens with outer join")
+
+        # sqlite does not support full outer joins!
+        # selection = cursor.execute(
+        #     "SELECT * FROM PHONEBOOK FULL OUTER JOIN ADDRESSES ON ADDRESSES.book_id = PHONEBOOK.id ")
+
+        print(selection)
