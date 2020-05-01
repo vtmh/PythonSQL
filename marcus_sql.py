@@ -6,6 +6,31 @@ import sqlite3
 # Is there a less annoying way to write queries?
 # Try again to add validation
 
+def get_phonebook_input():
+    first_name = input("Enter the first name: ")
+    while first_name == "":
+        print("Error, cannot be blank")
+        first_name = input("Enter the first name: ")
+
+    last_name = input("Enter the last name: ")
+    while last_name == "":
+        print("Error, cannot be blank")
+        last_name = input("Enter the last name: ")
+
+    phone = input("Enter phone: ")
+    while phone == "":
+        print("Error, cannot be blank")
+        phone = input("Enter phone: ")
+
+    age = input("Enter age: ")
+    while age == "":
+        print("Error, cannot be blank")
+        age = input("Enter age: ")
+    email = input("Enter email (optional): " or None)
+
+    return [first_name, last_name, phone, age, email]
+
+
 def show_book():
     phone_book = cursor.execute("SELECT * FROM PHONEBOOK ")
 
@@ -28,8 +53,7 @@ def init_tables():
                    "age INT NOT NULL,"
                    "email VARCHAR ) ")
 
-    # TODO
-    # This should cascade delete from book_id
+
     cursor.execute("CREATE TABLE IF NOT EXISTS Addresses "
                    "( id INTEGER PRIMARY KEY AUTOINCREMENT, address TEXT, book_id INTEGER,  FOREIGN KEY(book_id) REFERENCES PhoneBook(id) ON DELETE CASCADE )")
     print("Tables successfully created and/or exist already.")
@@ -80,19 +104,14 @@ if __name__ == "__main__":
     if user_input == "1":
         print('User has selected insert phonebook')
         # Get Fields for creating phonebook
-
-        first_name = input("Enter the first name: ")
-        last_name = input("Enter the last name: ")
-        phone = input("Enter phone: ")
-        age = input("Enter age: ")
-        email = input("Enter email: " or None)
+        user_data = get_phonebook_input()
 
         # Insert fields into Phonebook Table
         cursor.execute('''
             INSERT INTO PHONEBOOK (first_name, last_name, phone, age, email )
             VALUES(? , ?, ?, ?, ?)
         ''',
-                       (first_name, last_name, phone, age, email)
+                       (user_data)
                        )
         conn.commit()
         print('Person successfully added')
@@ -115,16 +134,13 @@ if __name__ == "__main__":
         for entry in selection:
             print(entry)
 
-        first_name = input("Enter the first name: ")
-        last_name = input("Enter the last name: ")
-        phone = input("Enter phone: ")
-        age = input("Enter age: ")
-        email = input("Enter email: ")
+        user_data = get_phonebook_input()
+        user_data.append(phonebook_id)
 
         # Update these fields in the database
         cursor.execute(
             "UPDATE PHONEBOOK SET first_name = ?, last_name = ?, phone = ?, age = ?, email = ? WHERE id=?",
-            (first_name, last_name, phone, age, email, phonebook_id))
+            (user_data))
 
         #commit change
         conn.commit()
@@ -196,24 +212,9 @@ if __name__ == "__main__":
         user_choice = input("Are you sure you want to delete everything? [Y/N]")
 
         if user_choice == "Y":
-            # print('DELETED')
-            # grab all phonebook
             entries = cursor.execute("SELECT * FROM PHONEBOOK")
-            # print(entries.fetchall())
-
             cursor.execute("DELETE FROM PHONEBOOK")
             conn.commit()
-
-            #loop through and delete
-            # for entry in entries:
-            #     print(entry)
-            #     #entry must be converted to string
-            #     entry_id = str(entry[0])
-            #     print(entry_id)
-            #     cursor.execute("DELETE FROM PHONEBOOK WHERE id=?", (entry_id))
-            #     print('Deleted: ', entry)
-
-
 
         if user_choice == "N":
             print("Operation Aborted")
