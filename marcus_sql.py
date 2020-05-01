@@ -30,6 +30,13 @@ def get_phonebook_input():
 
     return [first_name, last_name, phone, age, email]
 
+def yes_no():
+    user_choice = input("Are you sure you want to delete everything? [Y/N]")
+    while user_choice not in ['Y', 'y', 'N', 'n']:
+        print('Invalid')
+        user_choice = input("Are you sure you want to delete everything? [Y/N]")
+    return user_choice
+
 
 def show_book():
     phone_book = cursor.execute("SELECT * FROM PHONEBOOK ")
@@ -88,6 +95,7 @@ if __name__ == "__main__":
     print("5. Edit Address")
     print("6. Delete Address")
     print("7. Delete Everything")
+    print("8. Show all addresses from phonebook entry")
 
     user_input = input("Select your command: ")
     print(user_input)
@@ -209,12 +217,16 @@ if __name__ == "__main__":
     #Delete Everything
     if user_input == "7":
 
-        user_choice = input("Are you sure you want to delete everything? [Y/N]")
+        user_choice = yes_no()
 
-        if user_choice == "Y":
+        if user_choice == "Y" or "y":
             entries = cursor.execute("SELECT * FROM PHONEBOOK")
             cursor.execute("DELETE FROM PHONEBOOK")
             conn.commit()
 
-        if user_choice == "N":
+        elif user_choice == "N" or "n":
             print("Operation Aborted")
+
+    #Show all address entries
+    if user_input == "8":
+        print('i do nothing')
