@@ -12,6 +12,12 @@ def show_book():
     for item in phone_book:
         print(item)
 
+def show_addresses():
+    selected_table = cursor.execute("SELECT * FROM ADDRESSES")
+
+    for item in selected_table:
+        print(item)
+
 def init_tables():
     cursor = conn.cursor()
     cursor.execute("CREATE TABLE IF NOT EXISTS PhoneBook  ("
@@ -146,7 +152,28 @@ if __name__ == "__main__":
 
     #Edit Address
     if user_input == "5":
-        print("I do nothing")
+        #print out book
+        show_addresses()
+
+        address_id = input('Select your address entry:')
+
+        selection = cursor.execute("SELECT * FROM ADDRESSES WHERE id=?", (address_id))
+
+        print('Selected Address: ')
+        print(selection.fetchall())
+        edited_address = input("Enter an address: ")
+
+        # Update these fields in the database
+        cursor.execute(
+            "UPDATE ADDRESSES SET address = ? WHERE id=?",
+            (edited_address, address_id,))
+
+        # commit change
+        conn.commit()
+        print("Address updated successfully.")
+
+
+
 
     #Delete Address
     if user_input == "6":
