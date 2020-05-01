@@ -15,17 +15,13 @@ def init_tables():
                    "age INT NOT NULL,"
                    "email VARCHAR ) ")
 
-
-    #How do I set a foreign key?
+    # How do I set a foreign key?
     cursor.execute("CREATE TABLE IF NOT EXISTS Addresses "
                    "( id INTEGER PRIMARY KEY AUTOINCREMENT, book_id INTEGER, address TEXT, FOREIGN KEY(book_id) REFERENCES PhoneBook(id) )")
-
     print("Tables successfully created and/or exist already.")
 
 
 if __name__ == "__main__":
-    print('hello')
-
     # Create a connection to the DB
     conn = sqlite3.connect('phonebook.db')
 
@@ -50,6 +46,7 @@ if __name__ == "__main__":
     user_input = input("Select your command: ")
     print(user_input)
 
+    # Add Phonebook Entry
     if user_input == "1":
         print('User has selected insert phonebook')
         # Get Fields for creating phonebook
@@ -70,5 +67,21 @@ if __name__ == "__main__":
         conn.commit()
 
         print('Person successfully added')
+    #User wants to edit the phonebook
+    if user_input == "2":
+        #Print out all phonebook entries
+        #Allow user to choose phonebook entry
+        entries = cursor.execute("SELECT * FROM PHONEBOOK")
+
+        for entry in entries:
+            print(entry)
+
+        user_input = input('Select your phonebook entry:')
+
+        selection = cursor.execute("SELECT * FROM PHONEBOOK WHERE id=?", (user_input))
+
+        print('You want to edit this entry')
+        print(selection.fetchall())
+
 
 
