@@ -15,9 +15,10 @@ def init_tables():
                    "age INT NOT NULL,"
                    "email VARCHAR ) ")
 
-    # How do I set a foreign key?
+    # TODO
+    # This should cascade delete from book_id
     cursor.execute("CREATE TABLE IF NOT EXISTS Addresses "
-                   "( id INTEGER PRIMARY KEY AUTOINCREMENT, book_id INTEGER, address TEXT, FOREIGN KEY(book_id) REFERENCES PhoneBook(id) )")
+                   "( id INTEGER PRIMARY KEY AUTOINCREMENT, address TEXT, book_id INTEGER,  FOREIGN KEY(book_id) REFERENCES PhoneBook(id) )")
     print("Tables successfully created and/or exist already.")
 
 
@@ -46,6 +47,14 @@ if __name__ == "__main__":
     user_input = input("Select your command: ")
     print(user_input)
 
+    # Show Records
+    if user_input == "0":
+        print("Showing all records")
+        phone_book = cursor.execute("SELECT * FROM PHONEBOOK ")
+
+        for item in phone_book:
+            print(item)
+
     # Add Phonebook Entry
     if user_input == "1":
         print('User has selected insert phonebook')
@@ -67,21 +76,33 @@ if __name__ == "__main__":
         conn.commit()
 
         print('Person successfully added')
-    #User wants to edit the phonebook
+    # User wants to edit the phonebook
     if user_input == "2":
-        #Print out all phonebook entries
-        #Allow user to choose phonebook entry
+        # Print out all phonebook entries
+        # Allow user to choose phonebook entry
         entries = cursor.execute("SELECT * FROM PHONEBOOK")
 
         for entry in entries:
             print(entry)
 
-        user_input = input('Select your phonebook entry:')
+        phonebook_id = input('Select your phonebook entry:')
 
-        selection = cursor.execute("SELECT * FROM PHONEBOOK WHERE id=?", (user_input))
+        # TODO Is this the right way to select a single value?
+        selection = cursor.execute("SELECT * FROM PHONEBOOK WHERE id=?", (phonebook_id))
 
         print('You want to edit this entry')
         print(selection.fetchall())
 
+        first_name = input("Enter the first name: ")
+        last_name = input("Enter the last name: ")
+        phone = input("Enter phone: ")
+        age = input("Enter age: ")
+        email = input("Enter email: ")
 
+        # Update these fields in the database
+        cursor.execute(
+            "UPDATE PHONEBOOK SET first_name = ?, last_name = ?, phone = ?, age = ?, email = ? WHERE id=?",
+            (first_name, last_name, phone, age, email, phonebook_id))
 
+        conn.commit()
+        print("Entry updated successfully.")
