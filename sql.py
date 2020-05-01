@@ -17,7 +17,10 @@ if __name__ == '__main__':
 	print('Opened DB')
 
 	# create table...this is just an example and should be removed when you write your real stuff
-	conn.execute("CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, age INTEGER NOT NULL)")
+	conn.execute("CREATE TABLE IF NOT EXISTS test ("
+				 "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+				 "name TEXT NOT NULL, "
+				 "age INTEGER NOT NULL)")
 
 
 
