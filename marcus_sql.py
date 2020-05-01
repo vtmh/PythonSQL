@@ -3,7 +3,14 @@ import sqlite3
 
 # ToDo
 # Add validation to inputs
-#
+# Is there a less annoying way to write queries?
+# Try again to add validation
+
+def show_book():
+    phone_book = cursor.execute("SELECT * FROM PHONEBOOK ")
+
+    for item in phone_book:
+        print(item)
 
 def init_tables():
     cursor = conn.cursor()
@@ -64,7 +71,7 @@ if __name__ == "__main__":
         last_name = input("Enter the last name: ")
         phone = input("Enter phone: ")
         age = input("Enter age: ")
-        email = input("Enter email: ")
+        email = input("Enter email: " or None)
 
         # Insert fields into Phonebook Table
         cursor.execute('''
@@ -74,14 +81,14 @@ if __name__ == "__main__":
                        (first_name, last_name, phone, age, email)
                        )
         conn.commit()
-
         print('Person successfully added')
+
     # User wants to edit the phonebook
     if user_input == "2":
-        # Print out all phonebook entries
-        # Allow user to choose phonebook entry
+        # Grab all phonebook entries
         entries = cursor.execute("SELECT * FROM PHONEBOOK")
 
+        # Print out all phonebook entries
         for entry in entries:
             print(entry)
 
@@ -90,8 +97,9 @@ if __name__ == "__main__":
         # TODO Is this the right way to select a single value?
         selection = cursor.execute("SELECT * FROM PHONEBOOK WHERE id=?", (phonebook_id))
 
-        print('You want to edit this entry')
-        print(selection.fetchall())
+        print('Selected Entry: ')
+        for entry in selection:
+            print(entry)
 
         first_name = input("Enter the first name: ")
         last_name = input("Enter the last name: ")
@@ -104,5 +112,46 @@ if __name__ == "__main__":
             "UPDATE PHONEBOOK SET first_name = ?, last_name = ?, phone = ?, age = ?, email = ? WHERE id=?",
             (first_name, last_name, phone, age, email, phonebook_id))
 
+        #commit change
         conn.commit()
         print("Entry updated successfully.")
+
+    #Delete a phonebook entry
+    if user_input == "3":
+        print("Choose an entry to delete")
+        selection = cursor.execute("SELECT * FROM PhOnEboOk")
+        print(selection.fetchall())
+        deleted_entry = input("Delete this Entry:  ")
+        cursor.execute("DELETE FROM PHONEBOOK WHERE id=?", (deleted_entry))
+        conn.commit()
+
+        print('Entry successfully deleteted')
+
+
+    #Insert Address
+    if user_input == "4":
+
+        print("Which entry is this for?")
+        show_book()
+
+        phonebook_entry = input("Add address to this entry: ")
+        print("Create a new address")
+        address = input("Enter an address: ")
+        print(address)
+        #Insert the address
+        cursor.execute('INSERT into Addresses (address, book_id) VALUES (?, ?)', (address, phonebook_entry))
+
+        conn.commit()
+
+
+    #Edit Address
+    if user_input == "5":
+        print("I do nothing")
+
+    #Delete Address
+    if user_input == "6":
+        print("I do nothing")
+
+    #Delete Everything
+    if user_input == "6":
+        print("I do nothing")
