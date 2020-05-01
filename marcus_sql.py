@@ -192,4 +192,28 @@ if __name__ == "__main__":
 
     #Delete Everything
     if user_input == "7":
-        print("I do nothing")
+
+        user_choice = input("Are you sure you want to delete everything? [Y/N]")
+
+        if user_choice == "Y":
+            # print('DELETED')
+            # grab all phonebook
+            entries = cursor.execute("SELECT * FROM PHONEBOOK")
+            # print(entries.fetchall())
+
+            cursor.execute("DELETE FROM PHONEBOOK")
+            conn.commit()
+
+            #loop through and delete
+            # for entry in entries:
+            #     print(entry)
+            #     #entry must be converted to string
+            #     entry_id = str(entry[0])
+            #     print(entry_id)
+            #     cursor.execute("DELETE FROM PHONEBOOK WHERE id=?", (entry_id))
+            #     print('Deleted: ', entry)
+
+
+
+        if user_choice == "N":
+            print("Operation Aborted")
